@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Image, Pressable, FlatList } from 'react-native';
 import {useState, useEffect} from "react"
-export default function CafeScreen1({ navigation }) {
+export default function CafeScreen1({ navigation,route }) {
   var [data, setData] = useState([]);
   useEffect(()=>{
     fetch("https://654325f301b5e279de1ff315.mockapi.io/Shop")
@@ -10,6 +10,11 @@ export default function CafeScreen1({ navigation }) {
         setData(json);
       });
   }, []);
+  useEffect(() => {
+    if (route.params?.updateData) {
+      setData(route.params.updateData);
+    }
+  }, [route.params?.updateData]);
   return (
     <View style={styles.container}>
       <View style={styles.viewTitle}>
@@ -28,45 +33,44 @@ export default function CafeScreen1({ navigation }) {
           style={{width:25,height:50}}
         />
       </View>
-
       <FlatList
         data={data}
         renderItem={({item})=>
-          <Pressable style={styles.viewShop}>
-        <Image
-          source={{uri:item.img}}
-          resizeMode="cover"
-          style={{width:310,height:120,borderRadius:6}}
-        />
-        <View style={{flexDirection:"row",marginTop:5}}>
-          <View style={{flexDirection:"row", width:280}}>
-            <View style={styles.viewOpen}>
-            <Image
-              source={{uri:item.imgState}}
-              resizeMode="contain"
-              style={{width:20,height:20}}
-            />
-            <Text style={{fontWeight:400, fontSize:14, marginLeft:5}}>{item.state}</Text>
-          </View>
-          <View style={styles.viewTime}>
-            <Image
-              source={require("../assets/ClockIcon.png")}
-              resizeMode="contain"
-              style={{width:20,height:20}}
-            />
-            <Text style={{fontWeight:400, fontSize:14, marginLeft:5, color:"red"}}>{item.time}</Text>
-          </View>
-          </View>
+        <Pressable style={styles.viewShop} onPress={()=>navigation.navigate("CafeScreen3", { item })}>
           <Image
-            source={require("../assets/MapIcon.png")}
-            resizeMode="contain"
-            style={{width:20,height:20, marginLeft:2}}
+            source={{uri:item.img}}
+            resizeMode="cover"
+            style={{width:310,height:120,borderRadius:6}}
           />
-        </View>
-        <Text style={styles.txtNameShop}>{item.nameShop}</Text>
-        <Text style={styles.txtAdress}>{item.address}</Text>
-      </Pressable>
-        }
+          <View style={{flexDirection:"row",marginTop:5}}>
+            <View style={{flexDirection:"row", width:280}}>
+              <View style={styles.viewOpen}>
+                <Image
+                  source={{uri:item.imgState}}
+                  resizeMode="contain"
+                  style={{width:20,height:20}}
+                />
+                <Text style={{fontWeight:400, fontSize:14, marginLeft:5}}>{item.state}</Text>
+              </View>
+              <View style={styles.viewTime}>
+                <Image
+                  source={require("../assets/ClockIcon.png")}
+                  resizeMode="contain"
+                  style={{width:20,height:20}}
+                />
+                <Text style={{fontWeight:400, fontSize:14, marginLeft:5, color:"red"}}>{item.time}</Text>
+              </View>
+            </View>
+              <Image
+                source={require("../assets/MapIcon.png")}
+                resizeMode="contain"
+                style={{width:20,height:20, marginLeft:2}}
+              />
+          </View>
+          <Text style={styles.txtNameShop}>{item.nameShop}</Text>
+          <Text style={styles.txtAdress}>{item.address}</Text>
+        </Pressable>
+      }
       />
       
     </View>
